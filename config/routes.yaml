@@ -1,3 +1,9 @@
+weather_in_id:
+  path: /weather/id/{location}
+  controller: App\Controller\WeatherController:idAction
+  requirements:
+    id: \d+
+
 weather_in_city:
-  path: /weather/{country}/{city}
+  path: /weather/city/{city}
   controller: App\Controller\WeatherController:cityAction
