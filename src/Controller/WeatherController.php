@@ -20,7 +20,6 @@ class WeatherController extends AbstractController
         ]);
     }
 
-    #[Route('/city/{slug}', name: 'city')]
     public function cityAction($city, MeasurementRepository $measurementRepository, LocationRepository $locationRepository): Response
     {
         $location = $locationRepository->findOneBy(["city" => $city]);
