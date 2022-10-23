@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Location;
 use App\Entity\Measurement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,7 +22,7 @@ class MeasurementRepository extends ServiceEntityRepository
         parent::__construct($registry, Measurement::class);
     }
 
-    public function save(Measurement $entity, bool $flush = false): void
+    public function add(Measurement $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -39,28 +40,37 @@ class MeasurementRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Measurement[] Returns an array of Measurement objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findByLocation(Location $location)
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb->where('m.location.city = :location')
+            ->setParameter('location', $location->getCity());
 
-//    public function findOneBySomeField($value): ?Measurement
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $qb->getQuery()->getResult();
+    }
+
+    //    /**
+    //     * @return Measurement[] Returns an array of Measurement objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('m.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Measurement
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
