@@ -9,11 +9,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-#[Route('/location')]
+/**
+ * @Route("/location")
+ */
 class LocationController extends AbstractController
 {
-    #[Route('/', name: 'app_location_index', methods: ['GET'])]
+    /**
+     * @Route("/", name="app_location_index", methods={"GET"})
+     */
     public function index(LocationRepository $locationRepository): Response
     {
         return $this->render('location/index.html.twig', [
@@ -21,11 +26,16 @@ class LocationController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_location_new', methods: ['GET', 'POST'])]
+    /**
+     * @Route("/new", name="app_location_new", methods={"GET", "POST"})
+     * @IsGranted("ROLE_LOCATION_CREATE")
+     */
     public function new(Request $request, LocationRepository $locationRepository): Response
     {
         $location = new Location();
-        $form = $this->createForm(LocationType::class, $location);
+        $form = $this->createForm(LocationType::class, $location, [
+            'validation_groups' => ['edit', 'new']
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -40,7 +50,9 @@ class LocationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_location_show', methods: ['GET'])]
+    /**
+     * @Route("/{id}", name="app_location_show", methods={"GET"})
+     */
     public function show(Location $location): Response
     {
         return $this->render('location/show.html.twig', [
@@ -48,10 +60,15 @@ class LocationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_location_edit', methods: ['GET', 'POST'])]
+    /**
+     * @Route("/{id}/edit", name="app_location_edit", methods={"GET", "POST"})
+     * @IsGranted("ROLE_LOCATION_EDIT")
+     */
     public function edit(Request $request, Location $location, LocationRepository $locationRepository): Response
     {
-        $form = $this->createForm(LocationType::class, $location);
+        $form = $this->createForm(LocationType::class, $location, [
+            'validation_groups' => ['edit', 'new']
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -66,7 +83,10 @@ class LocationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_location_delete', methods: ['POST'])]
+    /**
+     * @Route("/{id}", name="app_location_delete", methods={"POST"})
+     * @IsGranted("ROLE_LOCATION_DELETE")
+     */
     public function delete(Request $request, Location $location, LocationRepository $locationRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$location->getId(), $request->request->get('_token'))) {
