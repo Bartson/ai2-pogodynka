@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}Weather in {{ location.city }}, {{ location.country }}{% endblock %}
+{% block title %}Weather in {{ location }}{% endblock %}
 {% block body %}
     <style>
         .example-wrapper {
@@ -13,7 +13,7 @@
         }
     </style>
     <div class="example-wrapper">
-        <h1>{{ location.city }}, {{ location.country }}</h1>
+        <h1>{{ location }}</h1>
         <ul>
         {% for measurement in measurements %}
             <li>{{ measurement.date|date('d.m.Y') }}: {{ measurement.temperature }}&deg;C</li>
