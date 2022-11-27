@@ -7,6 +7,7 @@ use App\Repository\LocationRepository;
 use App\Repository\MeasurementRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use App\Service\WeatherUtil;
 
 class WeatherController extends AbstractController
 {
@@ -20,14 +21,8 @@ class WeatherController extends AbstractController
         ]);
     }
 
-    public function cityAction($city, MeasurementRepository $measurementRepository, LocationRepository $locationRepository): Response
+    public function cityAction($city, WeatherUtil $weatherUtil): Response
     {
-        $location = $locationRepository->findOneBy(["city" => $city]);
-        $measurements = $measurementRepository->findByLocation($location);
-
-        return $this->render('weather/city.html.twig', [
-            'location' => $location,
-            'measurements' => $measurements,
-        ]);
+        return $this->render('weather/city.html.twig', $weatherUtil->getWeatherForCountryAndCity($city));
     }
 }
